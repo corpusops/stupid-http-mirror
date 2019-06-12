@@ -1,0 +1,21 @@
+---
+version: "3"
+services:
+  mirror:
+    image: corpusops/nginx:1.14-alpine
+    entrypoint:
+    - bash
+    - "-euxc"
+    - |-
+      cp -rfv /setup/* /
+      chown nginx /var/cache/nginx
+      exec /bin/supervisord.sh
+    volumes:
+    - ./sys:/setup
+    - ./logs:/logs
+    - ./cache:/var/cache/nginx
+    #- ./nginx.sh:/bin/nginx.sh
+    environment:
+    - "NO_FORCE_SSL=1"
+    - "NO_SSL=1"
+    env_file: [.env]
